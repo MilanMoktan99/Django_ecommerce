@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ product.name }}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ product.name }}</h1>
+
+{% if product.image %}
+    <img
+        src="{{ product.image.url }}"
+        alt="{{ product.name }}"
+        width="400"
+    >
+{% endif %}
+
+<p>
+    Category:
+    {{ product.category.name }}
+</p>
+
+<p>
+    {{ product.description }}
+</p>
+
+<h2>
+    ${{ product.price }}
+</h2>
+
+<p>
+    Stock: {{ product.stock }}
+</p>
+
+{% if user.is_staff %}
+
+    <a href="{% url 'product_update' product.pk %}">
+        Edit
+    </a>
+
+    <a href="{% url 'product_delete' product.pk %}">
+        Delete
+    </a>
+
+{% endif %}
+
+<a href="{% url 'product_list' %}">
+    Back to Products
+</a>
+
+{% endblock %}

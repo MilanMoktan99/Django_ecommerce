@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Products
+{% endblock %}
+
+{% block content %}
+
+<h1>Products</h1>
+
+<h3>Categories</h3>
+
+<a href="{% url 'product_list' %}">
+    All
+</a>
+
+{% for category in categories %}
+    <a href="?category={{ category.id }}">
+        {{ category.name }}
+    </a>
+{% endfor %}
+
+<hr>
+
+{% if user.is_staff %}
+    <a href="{% url 'product_create' %}">
+        Add Product
+    </a>
+{% endif %}
+
+<hr>
+
+{% for product in products %}
+
+    <div>
+
+        {% if product.image %}
+            <img
+                src="{{ product.image.url }}"
+                alt="{{ product.name }}"
+                width="200"
+            >
+        {% endif %}
+
+        <h2>
+            <a href="{% url 'product_detail' product.pk %}">
+                {{ product.name }}
+            </a>
+        </h2>
+
+        <p>
+            Category: {{ product.category.name }}
+        </p>
+
+        <p>
+            Price: ${{ product.price }}
+        </p>
+
+        <p>
+            Stock: {{ product.stock }}
+        </p>
+
+    </div>
+
+    <hr>
+
+{% empty %}
+
+    <p>No products available.</p>
+
+{% endfor %}
+
+{% endblock %}

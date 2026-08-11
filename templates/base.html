@@ -12,6 +12,11 @@
     <header>
         <nav>
             <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'product_list' %}">Products</a>
+
+            {% if user.is_staff %}
+                <a href="{% url 'product_create' %}">Add Product</a>
+            {% endif %}
 
             {% if user.is_authenticated %}
                 <a href="{% url 'profile' %}">Profile</a>

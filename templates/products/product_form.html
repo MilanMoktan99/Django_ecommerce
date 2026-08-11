@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if product %}
+    Edit Product
+{% else %}
+    Create Product
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if product %}
+    <h1>Edit Product</h1>
+{% else %}
+    <h1>Create Product</h1>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    <div>
+        <label>Name</label>
+
+        <input
+            type="text"
+            name="name"
+            value="{{ product.name|default:'' }}"
+            required
+        >
+    </div>
+
+    <br>
+
+    <div>
+        <label>Category</label>
+
+        <select name="category" required>
+
+            {% for category in categories %}
+
+                <option
+                    value="{{ category.id }}"
+                    {% if product.category.id == category.id %}
+                        selected
+                    {% endif %}
+                >
+                    {{ category.name }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Description</label>
+
+        <textarea
+            name="description"
+            required
+        >{{ product.description|default:'' }}</textarea>
+    </div>
+
+    <br>
+
+    <div>
+        <label>Price</label>
+
+        <input
+            type="number"
+            name="price"
+            step="0.01"
+            value="{{ product.price|default:'' }}"
+            required
+        >
+    </div>
+
+    <br>
+
+    <div>
+        <label>Stock</label>
+
+        <input
+            type="number"
+            name="stock"
+            value="{{ product.stock|default:'' }}"
+            required
+        >
+    </div>
+
+    <br>
+
+    <div>
+        <label>Image</label>
+
+        <input
+            type="file"
+            name="image"
+            accept="image/*"
+        >
+    </div>
+
+    <br>
+
+    <button type="submit">
+        Save Product
+    </button>
+
+</form>
+
+{% endblock %}
