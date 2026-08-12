@@ -15,6 +15,16 @@ def add_to_cart(request, product_id):
         is_available=True
     )
 
+    if product.stock <= 0:
+        messages.error(
+            request,
+            f'{product.name} is out of stock.'
+        )
+        return redirect(
+            'product_detail',
+            pk=product.id
+        )
+
     cart, created = Cart.objects.get_or_create(
         user=request.user
     )
@@ -25,6 +35,17 @@ def add_to_cart(request, product_id):
     )
 
     if not created:
+
+        if cart_item.quantity >= product.stock:
+            messages.error(
+                request,
+                'You cannot add more than the available stock.'
+            )
+
+            return redirect(
+                'cart:cart_detail'
+            )
+
         cart_item.quantity += 1
         cart_item.save()
 
@@ -33,7 +54,9 @@ def add_to_cart(request, product_id):
         f'{product.name} added to cart.'
     )
 
-    return redirect('cart:cart_detail')
+    return redirect(
+        'cart:cart_detail'
+    )
 
 @login_required
 def cart_detail(request):
@@ -61,8 +84,9 @@ def increase_quantity(request, item_id):
         cart__user=request.user
     )
 
-    cart_item.quantity += 1
-    cart_item.save()
+    if cart_item.quantity < cart_item.product.stock:
+        cart_item.quantity += 1
+        cart_item.save()
 
     return redirect('cart:cart_detail')
 

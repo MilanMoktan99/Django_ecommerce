@@ -11,6 +11,15 @@ def product_list(request):
 
     categories = Category.objects.all()
 
+    # Search
+    search = request.GET.get('search', '')
+
+    if search:
+        products = products.filter(
+            name__icontains=search
+        )
+
+    # Category filter
     category_id = request.GET.get('category')
 
     if category_id:
@@ -21,6 +30,7 @@ def product_list(request):
     context = {
         'products': products,
         'categories': categories,
+        'search': search,
     }
 
     return render(
