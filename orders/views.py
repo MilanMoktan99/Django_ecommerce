@@ -27,13 +27,19 @@ def checkout(request):
         return redirect('cart:cart_detail')
 
     for item in items:
-        if (
-            not item.product.is_available
-            or item.product.stock < item.quantity
-        ):
+
+        if not item.product.is_available:
             messages.error(
                 request,
-                f'Not enough stock for {item.product.name}.'
+                f'{item.product.name} is no longer available.'
+            )
+            return redirect('cart:cart_detail')
+
+        if item.product.stock < item.quantity:
+            messages.error(
+                request,
+                f'Not enough stock for {item.product.name}. '
+                f'Only {item.product.stock} available.'
             )
             return redirect('cart:cart_detail')
 
