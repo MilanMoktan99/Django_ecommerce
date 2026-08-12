@@ -33,6 +33,28 @@
     Stock: {{ product.stock }}
 </p>
 
+{% if product.stock > 0 and product.is_available %}
+
+    {% if user.is_authenticated %}
+
+        <a href="{% url 'add_to_cart' product.id %}">
+            Add to Cart
+        </a>
+
+    {% else %}
+
+        <a href="{% url 'login' %}">
+            Login to Add to Cart
+        </a>
+
+    {% endif %}
+
+{% else %}
+
+    <p>Out of Stock</p>
+
+{% endif %}
+
 {% if user.is_staff %}
 
     <a href="{% url 'product_update' product.pk %}">
