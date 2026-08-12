@@ -1,14 +1,26 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Checkout
+Order #{{ order.id }}
 {% endblock %}
 
 {% block content %}
 
-<h1>Checkout</h1>
+<h1>Order #{{ order.id }}</h1>
 
-{% for item in items %}
+<p>
+    Status:
+    {{ order.get_status_display }}
+</p>
+
+<p>
+    Date:
+    {{ order.created_at }}
+</p>
+
+<hr>
+
+{% for item in order.items.all %}
 
     <div>
 
@@ -18,6 +30,10 @@ Checkout
 
         <p>
             Quantity: {{ item.quantity }}
+        </p>
+
+        <p>
+            Price: ${{ item.price }}
         </p>
 
         <p>
@@ -31,21 +47,11 @@ Checkout
 <hr>
 
 <h2>
-    Total: ${{ total }}
+    Total: ${{ order.total_amount }}
 </h2>
 
-<form method="post">
-
-    {% csrf_token %}
-
-    <button type="submit">
-        Confirm Order
-    </button>
-
-</form>
-
-<a href="{% url 'cart:cart_detail' %}">
-    Back to Cart
+<a href="{% url 'orders:order_list' %}">
+    Back to Orders
 </a>
 
 {% endblock %}

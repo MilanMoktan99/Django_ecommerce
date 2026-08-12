@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Shopping Cart
+{% endblock %}
+
+{% block content %}
+
+<h1>Shopping Cart</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+{% if items %}
+
+    {% for item in items %}
+
+        <div>
+
+            {% if item.product.image %}
+                <img
+                    src="{{ item.product.image.url }}"
+                    alt="{{ item.product.name }}"
+                    width="120"
+                >
+            {% endif %}
+
+            <h2>
+                {{ item.product.name }}
+            </h2>
+
+            <p>
+                Price:
+                ${{ item.product.price }}
+            </p>
+
+            <p>
+                Quantity:
+                {{ item.quantity }}
+            </p>
+
+            <p>
+                Subtotal:
+                ${{ item.get_subtotal }}
+            </p>
+
+            <a href="{% url 'cart:decrease_quantity' item.id %}">
+                −
+            </a>
+
+            <a href="{% url 'cart:increase_quantity' item.id %}">
+                +
+            </a>
+
+            <a href="{% url 'cart:remove_from_cart' item.id %}">
+                Remove
+            </a>
+
+        </div>
+
+        <hr>
+
+    {% endfor %}
+
+    <h2>
+        Total: ${{ total }}
+    </h2>
+
+    <a href="{% url 'orders:checkout' %}">
+        Proceed to Checkout
+    </a>
+
+{% else %}
+
+    <p>Your cart is empty.</p>
+
+{% endif %}
+
+{% endblock %}
