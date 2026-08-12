@@ -47,15 +47,15 @@ Shopping Cart
                 ${{ item.get_subtotal }}
             </p>
 
-            <a href="{% url 'decrease_quantity' item.id %}">
+            <a href="{% url 'cart:decrease_quantity' item.id %}">
                 −
             </a>
 
-            <a href="{% url 'increase_quantity' item.id %}">
+            <a href="{% url 'cart:increase_quantity' item.id %}">
                 +
             </a>
 
-            <a href="{% url 'remove_from_cart' item.id %}">
+            <a href="{% url 'cart:remove_from_cart' item.id %}">
                 Remove
             </a>
 
@@ -69,7 +69,7 @@ Shopping Cart
         Total: ${{ total }}
     </h2>
 
-    <a href="{% url 'checkout' %}">
+    <a href="{% url 'orders:checkout' %}">
         Proceed to Checkout
     </a>
 

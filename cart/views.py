@@ -33,7 +33,7 @@ def add_to_cart(request, product_id):
         f'{product.name} added to cart.'
     )
 
-    return redirect('cart_detail')
+    return redirect('cart:cart_detail')
 
 @login_required
 def cart_detail(request):
@@ -64,7 +64,7 @@ def increase_quantity(request, item_id):
     cart_item.quantity += 1
     cart_item.save()
 
-    return redirect('cart_detail')
+    return redirect('cart:cart_detail')
 
 @login_required
 def decrease_quantity(request, item_id):
@@ -81,7 +81,7 @@ def decrease_quantity(request, item_id):
     else:
         cart_item.delete()
 
-    return redirect('cart_detail')
+    return redirect('cart:cart_detail')
 
 @login_required
 def remove_from_cart(request, item_id):
@@ -99,4 +99,4 @@ def remove_from_cart(request, item_id):
         'Item removed from cart.'
     )
 
-    return redirect('cart_detail')
+    return redirect('cart:cart_detail')

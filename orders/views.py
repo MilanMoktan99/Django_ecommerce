@@ -24,7 +24,7 @@ def checkout(request):
             request,
             'Your cart is empty.'
         )
-        return redirect('cart_detail')
+        return redirect('cart:cart_detail')
 
     for item in items:
         if (
@@ -35,7 +35,7 @@ def checkout(request):
                 request,
                 f'Not enough stock for {item.product.name}.'
             )
-            return redirect('cart_detail')
+            return redirect('cart:cart_detail')
 
     total = cart.get_total()
 
@@ -66,7 +66,7 @@ def checkout(request):
         )
 
         return redirect(
-            'order_detail',
+            'orders:order_detail',
             pk=order.pk
         )
 
