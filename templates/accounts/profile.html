@@ -6,13 +6,81 @@ Profile
 
 {% block content %}
 
-<h1>My Profile</h1>
+<section class="account-page">
 
-<p>Username: {{ user.username }}</p>
-<p>Email: {{ user.email }}</p>
+    <div class="account-header">
+        <p class="account-eyebrow">ACCOUNT</p>
 
-<p>
-    Name: {{ user.first_name }} {{ user.last_name }}
-</p>
+        <h1>My Profile</h1>
+
+        <p>
+            Manage and view your account information.
+        </p>
+    </div>
+
+
+    <div class="profile-card">
+
+        <div class="profile-avatar">
+            {{ user.username|first|upper }}
+        </div>
+
+
+        <div class="profile-info">
+
+            <div class="profile-row">
+                <span>Username</span>
+                <strong>{{ user.username }}</strong>
+            </div>
+
+            <div class="profile-row">
+                <span>Email</span>
+                <strong>{{ user.email }}</strong>
+            </div>
+
+            <div class="profile-row">
+                <span>First Name</span>
+                <strong>
+                    {{ user.first_name|default:"Not provided" }}
+                </strong>
+            </div>
+
+            <div class="profile-row">
+                <span>Last Name</span>
+                <strong>
+                    {{ user.last_name|default:"Not provided" }}
+                </strong>
+            </div>
+
+            <div class="profile-row">
+                <span>Account Type</span>
+
+                <strong>
+                    {% if user.is_staff %}
+                        Administrator
+                    {% else %}
+                        Customer
+                    {% endif %}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-actions">
+
+        <a href="{% url 'orders:order_list' %}" class="account-button">
+            View My Orders
+        </a>
+
+        <a href="{% url 'product_list' %}" class="account-button secondary">
+            Continue Shopping
+        </a>
+
+    </div>
+
+</section>
 
 {% endblock %}

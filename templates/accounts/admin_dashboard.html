@@ -6,10 +6,129 @@ Admin Dashboard
 
 {% block content %}
 
-<h1>Admin Dashboard</h1>
+<section class="admin-dashboard">
 
-<p>Welcome, {{ user.username }}.</p>
+    <div class="admin-header">
 
-<p>You have administrator access.</p>
+        <div>
+            <p class="admin-eyebrow">
+                ADMINISTRATION
+            </p>
+
+            <h1>Admin Dashboard</h1>
+
+            <p>
+                Welcome back, {{ user.username }}.
+                Manage your store from here.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="admin-grid">
+
+        <!-- Products -->
+
+        <div class="admin-card">
+
+            <div class="admin-card-icon">
+                P
+            </div>
+
+            <h2>Products</h2>
+
+            <p>
+                View and manage the products available
+                in your store.
+            </p>
+
+            <a
+                href="{% url 'product_list' %}"
+                class="admin-card-link"
+            >
+                View Products →
+            </a>
+
+        </div>
+
+
+        <!-- Add Product -->
+
+        <div class="admin-card">
+
+            <div class="admin-card-icon">
+                +
+            </div>
+
+            <h2>Add Product</h2>
+
+            <p>
+                Create a new product and add it
+                to your store.
+            </p>
+
+            <a
+                href="{% url 'product_create' %}"
+                class="admin-card-link"
+            >
+                Add Product →
+            </a>
+
+        </div>
+
+
+        <!-- Orders -->
+
+        <div class="admin-card">
+
+            <div class="admin-card-icon">
+                O
+            </div>
+
+            <h2>Orders</h2>
+
+            <p>
+                View customer orders and monitor
+                their current status.
+            </p>
+
+            <a
+                href="{% url 'orders:order_list' %}"
+                class="admin-card-link"
+            >
+                View Orders →
+            </a>
+
+        </div>
+
+
+        <!-- Django Admin -->
+
+        <div class="admin-card">
+
+            <div class="admin-card-icon">
+                ⚙
+            </div>
+
+            <h2>Django Admin</h2>
+
+            <p>
+                Access the full Django administration
+                panel for advanced management.
+            </p>
+
+            <a
+                href="{% url 'admin:index' %}"
+                class="admin-card-link"
+            >
+                Open Admin →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
 
 {% endblock %}

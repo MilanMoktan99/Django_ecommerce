@@ -12,7 +12,7 @@ def product_list(request):
     categories = Category.objects.all()
 
     # Search
-    search = request.GET.get('search', '')
+    search = request.GET.get('search', '').strip()
 
     if search:
         products = products.filter(

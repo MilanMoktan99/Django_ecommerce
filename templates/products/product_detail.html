@@ -1,74 +1,173 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ product.name }}
+{{ product.name }} | DjangoShop
 {% endblock %}
 
 {% block content %}
 
-<h1>{{ product.name }}</h1>
+<div class="product-detail-page">
 
-{% if product.image %}
-    <img
-        src="{{ product.image.url }}"
-        alt="{{ product.name }}"
-        width="400"
-    >
-{% endif %}
+    <!-- BACK LINK -->
 
-<p>
-    Category:
-    {{ product.category.name }}
-</p>
-
-<p>
-    {{ product.description }}
-</p>
-
-<h2>
-    ${{ product.price }}
-</h2>
-
-<p>
-    Stock: {{ product.stock }}
-</p>
-
-{% if product.stock > 0 and product.is_available %}
-
-    {% if user.is_authenticated %}
-
-        <a href="{% url 'cart:add_to_cart' product.id %}">
-            Add to Cart
-        </a>
-
-    {% else %}
-
-        <a href="{% url 'login' %}">
-            Login to Add to Cart
-        </a>
-
-    {% endif %}
-
-{% else %}
-
-    <p>Out of Stock</p>
-
-{% endif %}
-
-{% if user.is_staff %}
-
-    <a href="{% url 'product_update' product.pk %}">
-        Edit
+    <a href="{% url 'product_list' %}" class="back-link">
+        ← Back to Products
     </a>
 
-    <a href="{% url 'product_delete' product.pk %}">
-        Delete
-    </a>
 
-{% endif %}
+    <!-- PRODUCT -->
 
-<a href="{% url 'product_list' %}">
-    Back to Products
-</a>
+    <section class="product-detail">
+
+        <!-- IMAGE -->
+
+        <div class="product-detail-image">
+
+            {% if product.image %}
+
+                <img
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+
+            {% else %}
+
+                <div class="product-detail-placeholder">
+                    No Image Available
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- INFORMATION -->
+
+        <div class="product-detail-info">
+
+            <p class="product-detail-category">
+                {{ product.category.name }}
+            </p>
+
+
+            <h1>
+                {{ product.name }}
+            </h1>
+
+
+            <p class="product-detail-price">
+                Rs. {{ product.price }}
+            </p>
+
+
+            <div class="product-detail-divider"></div>
+
+
+            <div class="product-description">
+
+                <h3>
+                    Description
+                </h3>
+
+                <p>
+                    {{ product.description }}
+                </p>
+
+            </div>
+
+
+            <!-- STOCK -->
+
+            <div class="product-stock">
+
+                {% if product.stock > 0 and product.is_available %}
+
+                    <span class="stock-dot available"></span>
+
+                    <span>
+                        {{ product.stock }} available
+                    </span>
+
+                {% else %}
+
+                    <span class="stock-dot unavailable"></span>
+
+                    <span>
+                        Out of stock
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ACTION -->
+
+            <div class="product-detail-actions">
+
+                {% if product.stock > 0 and product.is_available %}
+
+                    {% if user.is_authenticated %}
+
+                        <a
+                            href="{% url 'cart:add_to_cart' product.id %}"
+                            class="add-cart-button"
+                        >
+                            Add to Cart
+                        </a>
+
+                    {% else %}
+
+                        <a
+                            href="{% url 'login' %}"
+                            class="add-cart-button"
+                        >
+                            Login to Add to Cart
+                        </a>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <button
+                        class="add-cart-button disabled"
+                        disabled
+                    >
+                        Out of Stock
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- STAFF ACTIONS -->
+
+            {% if user.is_staff %}
+
+                <div class="product-staff-actions">
+
+                    <a
+                        href="{% url 'product_update' product.pk %}"
+                    >
+                        Edit Product
+                    </a>
+
+                    <a
+                        href="{% url 'product_delete' product.pk %}"
+                        class="danger-action"
+                    >
+                        Delete Product
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</div>
 
 {% endblock %}

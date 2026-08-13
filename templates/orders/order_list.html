@@ -1,43 +1,142 @@
 {% extends 'base.html' %}
 
 {% block title %}
-My Orders
+My Orders | DjangoShop
 {% endblock %}
 
 {% block content %}
 
-<h1>My Orders</h1>
+<div class="orders-page">
 
-{% for order in orders %}
+    <!-- PAGE HEADER -->
 
-    <div>
+    <div class="orders-header">
 
-        <h2>
-            <a href="{% url 'orders:order_detail' order.id %}">
-                Order #{{ order.id }}
-            </a>
-        </h2>
-
-        <p>
-            Total: ${{ order.total_amount }}
+        <p class="orders-eyebrow">
+            Your Account
         </p>
 
-        <p>
-            Status: {{ order.get_status_display }}
-        </p>
+        <h1>
+            My Orders
+        </h1>
 
         <p>
-            Date: {{ order.created_at }}
+            View and track all your previous orders.
         </p>
 
     </div>
 
-    <hr>
 
-{% empty %}
+    <!-- ORDERS -->
 
-    <p>You have not placed any orders yet.</p>
+    {% if orders %}
 
-{% endfor %}
+        <div class="orders-list">
+
+            {% for order in orders %}
+
+                <a
+                    href="{% url 'orders:order_detail' order.id %}"
+                    class="order-card"
+                >
+
+                    <!-- ORDER INFORMATION -->
+
+                    <div class="order-main">
+
+                        <div class="order-number">
+
+                            <span>
+                                Order
+                            </span>
+
+                            <h2>
+                                #{{ order.id }}
+                            </h2>
+
+                        </div>
+
+
+                        <p class="order-date">
+                            {{ order.created_at|date:"M d, Y" }}
+                        </p>
+
+                    </div>
+
+
+                    <!-- ORDER STATUS -->
+
+                    <div class="order-status">
+
+                        <span class="status-label">
+                            Status
+                        </span>
+
+                        <span class="status-badge status-{{ order.status }}">
+                            {{ order.get_status_display }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- ORDER TOTAL -->
+
+                    <div class="order-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong>
+                            Rs. {{ order.total_amount }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- ARROW -->
+
+                    <div class="order-arrow">
+                        →
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <!-- EMPTY ORDERS -->
+
+        <div class="empty-orders">
+
+            <div class="empty-orders-icon">
+                📦
+            </div>
+
+            <h2>
+                No orders yet
+            </h2>
+
+            <p>
+                You haven't placed any orders yet.
+                Start shopping and your orders will appear here.
+            </p>
+
+            <a
+                href="{% url 'product_list' %}"
+                class="orders-shop-button"
+            >
+                Start Shopping
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
 
 {% endblock %}

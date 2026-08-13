@@ -2,114 +2,278 @@
 
 {% block title %}
 {% if product %}
-    Edit Product
+    Edit Product | DjangoShop
 {% else %}
-    Create Product
+    Create Product | DjangoShop
 {% endif %}
 {% endblock %}
 
 {% block content %}
 
-{% if product %}
-    <h1>Edit Product</h1>
-{% else %}
-    <h1>Create Product</h1>
-{% endif %}
+<div class="product-form-page">
 
-<form method="post" enctype="multipart/form-data">
+    <div class="product-form-header">
 
-    {% csrf_token %}
+        <a href="{% url 'product_list' %}" class="back-link">
+            ← Back to Products
+        </a>
 
-    <div>
-        <label>Name</label>
+        {% if product %}
 
-        <input
-            type="text"
-            name="name"
-            value="{{ product.name|default:'' }}"
-            required
-        >
+            <p class="form-eyebrow">
+                Product Management
+            </p>
+
+            <h1>
+                Edit Product
+            </h1>
+
+            <p>
+                Update the information and inventory for this product.
+            </p>
+
+        {% else %}
+
+            <p class="form-eyebrow">
+                Product Management
+            </p>
+
+            <h1>
+                Create Product
+            </h1>
+
+            <p>
+                Add a new product to your store.
+            </p>
+
+        {% endif %}
+
     </div>
 
-    <br>
 
-    <div>
-        <label>Category</label>
+    <div class="product-form-card">
 
-        <select name="category" required>
+        <form method="post" enctype="multipart/form-data">
 
-            {% for category in categories %}
+            {% csrf_token %}
 
-                <option
-                    value="{{ category.id }}"
-                    {% if product.category.id == category.id %}
-                        selected
-                    {% endif %}
+
+            <!-- PRODUCT NAME -->
+
+            <div class="form-group">
+
+                <label for="product-name">
+                    Product Name
+                </label>
+
+                <input
+                    id="product-name"
+                    type="text"
+                    name="name"
+                    value="{{ product.name|default:'' }}"
+                    placeholder="Enter product name"
+                    required
                 >
-                    {{ category.name }}
-                </option>
 
-            {% endfor %}
+            </div>
 
-        </select>
+
+            <!-- CATEGORY -->
+
+            <div class="form-group">
+
+                <label for="product-category">
+                    Category
+                </label>
+
+                <select
+                    id="product-category"
+                    name="category"
+                    required
+                >
+
+                    <option value="" disabled
+                        {% if not product %}selected{% endif %}
+                    >
+                        Select a category
+                    </option>
+
+                    {% for category in categories %}
+
+                        <option
+                            value="{{ category.id }}"
+                            {% if product.category.id == category.id %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ category.name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="product-description">
+                    Description
+                </label>
+
+                <textarea
+                    id="product-description"
+                    name="description"
+                    placeholder="Describe the product..."
+                    required
+                >{{ product.description|default:'' }}</textarea>
+
+            </div>
+
+
+            <!-- PRICE + STOCK -->
+
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="product-price">
+                        Price
+                    </label>
+
+                    <div class="input-prefix">
+
+                        <span>Rs.</span>
+
+                        <input
+                            id="product-price"
+                            type="number"
+                            name="price"
+                            step="0.01"
+                            min="0"
+                            value="{{ product.price|default:'' }}"
+                            placeholder="0.00"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="product-stock">
+                        Stock
+                    </label>
+
+                    <input
+                        id="product-stock"
+                        type="number"
+                        name="stock"
+                        min="0"
+                        value="{{ product.stock|default:'' }}"
+                        placeholder="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- IMAGE -->
+
+            <div class="form-group">
+
+                <label for="product-image">
+                    Product Image
+                </label>
+
+                {% if product.image %}
+
+                    <div class="current-product-image">
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                        <div>
+                            <p>
+                                Current image
+                            </p>
+
+                            <span>
+                                Upload a new image to replace it.
+                            </span>
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <label
+                    for="product-image"
+                    class="file-upload"
+                >
+
+                    <span class="file-upload-title">
+                        Choose an image
+                    </span>
+
+                    <span class="file-upload-description">
+                        JPG, PNG or WEBP
+                    </span>
+
+                </label>
+
+                <input
+                    id="product-image"
+                    class="file-input"
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                >
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="product-form-actions">
+
+                <a
+                    href="{% if product %}{% url 'product_detail' product.pk %}{% else %}{% url 'product_list' %}{% endif %}"
+                    class="secondary-button"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+
+                    {% if product %}
+                        Save Changes
+                    {% else %}
+                        Create Product
+                    {% endif %}
+
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
 
-    <br>
-
-    <div>
-        <label>Description</label>
-
-        <textarea
-            name="description"
-            required
-        >{{ product.description|default:'' }}</textarea>
-    </div>
-
-    <br>
-
-    <div>
-        <label>Price</label>
-
-        <input
-            type="number"
-            name="price"
-            step="0.01"
-            value="{{ product.price|default:'' }}"
-            required
-        >
-    </div>
-
-    <br>
-
-    <div>
-        <label>Stock</label>
-
-        <input
-            type="number"
-            name="stock"
-            value="{{ product.stock|default:'' }}"
-            required
-        >
-    </div>
-
-    <br>
-
-    <div>
-        <label>Image</label>
-
-        <input
-            type="file"
-            name="image"
-            accept="image/*"
-        >
-    </div>
-
-    <br>
-
-    <button type="submit">
-        Save Product
-    </button>
-
-</form>
+</div>
 
 {% endblock %}

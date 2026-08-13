@@ -1,57 +1,210 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Order #{{ order.id }}
+Order #{{ order.id }} | DjangoShop
 {% endblock %}
 
 {% block content %}
 
-<h1>Order #{{ order.id }}</h1>
+<div class="order-detail-page">
 
-<p>
-    Status:
-    {{ order.get_status_display }}
-</p>
+    <!-- HEADER -->
 
-<p>
-    Date:
-    {{ order.created_at }}
-</p>
+    <div class="order-detail-header">
 
-<hr>
+        <div>
+            <p class="orders-eyebrow">
+                Order Details
+            </p>
 
-{% for item in order.items.all %}
+            <h1>
+                Order #{{ order.id }}
+            </h1>
 
-    <div>
+            <p class="order-detail-date">
+                Placed on {{ order.created_at|date:"F d, Y • h:i A" }}
+            </p>
+        </div>
 
-        <h3>
-            {{ item.product.name }}
-        </h3>
 
-        <p>
-            Quantity: {{ item.quantity }}
-        </p>
+        <div class="order-detail-status">
 
-        <p>
-            Price: ${{ item.price }}
-        </p>
+            <span class="status-label">
+                Order Status
+            </span>
 
-        <p>
-            Subtotal: ${{ item.get_subtotal }}
-        </p>
+            <span class="status-badge status-{{ order.status }}">
+                {{ order.get_status_display }}
+            </span>
+
+        </div>
 
     </div>
 
-{% endfor %}
 
-<hr>
+    <!-- ORDER CONTENT -->
 
-<h2>
-    Total: ${{ order.total_amount }}
-</h2>
+    <div class="order-detail-layout">
 
-<a href="{% url 'orders:order_list' %}">
-    Back to Orders
-</a>
+        <!-- ITEMS -->
+
+        <section class="order-items-section">
+
+            <div class="order-section-header">
+
+                <h2>
+                    Order Items
+                </h2>
+
+                <span>
+                    {{ order.items.all|length }} item{{ order.items.all|length|pluralize }}
+                </span>
+
+            </div>
+
+
+            <div class="order-items">
+
+                {% for item in order.items.all %}
+
+                    <div class="order-item">
+
+                        <!-- PRODUCT IMAGE -->
+
+                        <div class="order-item-image">
+
+                            {% if item.product.image %}
+
+                                <img
+                                    src="{{ item.product.image.url }}"
+                                    alt="{{ item.product.name }}"
+                                >
+
+                            {% else %}
+
+                                <div class="order-item-placeholder">
+                                    No Image
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- PRODUCT INFORMATION -->
+
+                        <div class="order-item-info">
+
+                            {% if item.product.category %}
+                                <p class="order-item-category">
+                                    {{ item.product.category.name }}
+                                </p>
+                            {% endif %}
+
+                            <h3>
+                                {{ item.product.name }}
+                            </h3>
+
+                            <p class="order-item-quantity">
+                                Quantity: {{ item.quantity }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- PRICE -->
+
+                        <div class="order-item-price">
+
+                            <span>
+                                Rs. {{ item.price }} × {{ item.quantity }}
+                            </span>
+
+                            <strong>
+                                Rs. {{ item.get_subtotal }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <p class="order-empty-items">
+                        No items found for this order.
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- SUMMARY -->
+
+        <aside class="order-summary">
+
+            <h2>
+                Order Summary
+            </h2>
+
+
+            <div class="order-summary-row">
+
+                <span>
+                    Status
+                </span>
+
+                <span>
+                    {{ order.get_status_display }}
+                </span>
+
+            </div>
+
+
+            <div class="order-summary-row">
+
+                <span>
+                    Order Date
+                </span>
+
+                <span>
+                    {{ order.created_at|date:"M d, Y" }}
+                </span>
+
+            </div>
+
+
+            <div class="order-summary-divider"></div>
+
+
+            <div class="order-summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    Rs. {{ order.total_amount }}
+                </strong>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+
+    <!-- BACK -->
+
+    <a
+        href="{% url 'orders:order_list' %}"
+        class="back-orders"
+    >
+        ← Back to My Orders
+    </a>
+
+</div>
 
 {% endblock %}

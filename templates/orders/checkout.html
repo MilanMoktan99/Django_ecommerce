@@ -1,51 +1,205 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Checkout
+Checkout | DjangoShop
 {% endblock %}
 
 {% block content %}
 
-<h1>Checkout</h1>
+<div class="checkout-page">
 
-{% for item in items %}
+    <!-- PAGE HEADER -->
 
-    <div>
+    <div class="checkout-header">
 
-        <h3>
-            {{ item.product.name }}
-        </h3>
-
-        <p>
-            Quantity: {{ item.quantity }}
+        <p class="orders-eyebrow">
+            Final Step
         </p>
 
+        <h1>
+            Checkout
+        </h1>
+
         <p>
-            Subtotal: ${{ item.get_subtotal }}
+            Review your order before confirming your purchase.
         </p>
 
     </div>
 
-{% endfor %}
 
-<hr>
+    <!-- CHECKOUT LAYOUT -->
 
-<h2>
-    Total: ${{ total }}
-</h2>
+    <div class="checkout-layout">
 
-<form method="post">
+        <!-- ORDER ITEMS -->
 
-    {% csrf_token %}
+        <section class="checkout-items">
 
-    <button type="submit">
-        Confirm Order
-    </button>
+            <div class="checkout-section-header">
 
-</form>
+                <h2>
+                    Your Items
+                </h2>
 
-<a href="{% url 'cart:cart_detail' %}">
-    Back to Cart
-</a>
+                <span>
+                    {{ items|length }} item{{ items|length|pluralize }}
+                </span>
+
+            </div>
+
+
+            <div class="checkout-item-list">
+
+                {% for item in items %}
+
+                    <div class="checkout-item">
+
+                        <!-- IMAGE -->
+
+                        <div class="checkout-item-image">
+
+                            {% if item.product.image %}
+
+                                <img
+                                    src="{{ item.product.image.url }}"
+                                    alt="{{ item.product.name }}"
+                                >
+
+                            {% else %}
+
+                                <div class="checkout-item-placeholder">
+                                    No Image
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- PRODUCT INFO -->
+
+                        <div class="checkout-item-info">
+
+                            {% if item.product.category %}
+
+                                <p class="checkout-item-category">
+                                    {{ item.product.category.name }}
+                                </p>
+
+                            {% endif %}
+
+                            <h3>
+                                {{ item.product.name }}
+                            </h3>
+
+                            <p class="checkout-item-quantity">
+                                Quantity: {{ item.quantity }}
+                            </p>
+
+                        </div>
+
+
+                        <!-- SUBTOTAL -->
+
+                        <div class="checkout-item-price">
+
+                            <span>
+                                Rs. {{ item.product.price }}
+                            </span>
+
+                            <strong>
+                                Rs. {{ item.get_subtotal }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ORDER SUMMARY -->
+
+        <aside class="checkout-summary">
+
+            <h2>
+                Order Summary
+            </h2>
+
+
+            <div class="checkout-summary-row">
+
+                <span>
+                    Items
+                </span>
+
+                <span>
+                    {{ items|length }}
+                </span>
+
+            </div>
+
+
+            <div class="checkout-summary-row">
+
+                <span>
+                    Subtotal
+                </span>
+
+                <span>
+                    Rs. {{ total }}
+                </span>
+
+            </div>
+
+
+            <div class="checkout-summary-divider"></div>
+
+
+            <div class="checkout-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong>
+                    Rs. {{ total }}
+                </strong>
+
+            </div>
+
+
+            <!-- CONFIRM ORDER -->
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="confirm-order-button"
+                >
+                    Confirm Order
+                </button>
+
+            </form>
+
+
+            <a
+                href="{% url 'cart:cart_detail' %}"
+                class="back-cart"
+            >
+                ← Back to Cart
+            </a>
+
+        </aside>
+
+    </div>
+
+</div>
 
 {% endblock %}

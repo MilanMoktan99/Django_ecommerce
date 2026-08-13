@@ -1,17 +1,154 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Home
+DjangoShop | Home
 {% endblock %}
 
 {% block content %}
 
-<h1>Welcome to Our E-Commerce Store</h1>
+<section class="hero">
 
-{% if user.is_authenticated %}
-    <p>Welcome, {{ user.username }}!</p>
-{% else %}
-    <p>Please login or register to continue.</p>
-{% endif %}
+    <div class="hero-content">
+
+        <p class="hero-label">
+            SIMPLE • MODERN • RELIABLE
+        </p>
+
+        <h1>
+            Everything you need,
+            <span>all in one place.</span>
+        </h1>
+
+        <p class="hero-description">
+            Discover quality products at great prices with a
+            simple and reliable shopping experience.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="{% url 'product_list' %}" class="primary-button">
+                Shop Products
+            </a>
+
+            {% if not user.is_authenticated %}
+
+                <a href="{% url 'register' %}" class="secondary-button">
+                    Create Account
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="home-section">
+
+    <div class="section-heading">
+
+        <div>
+            <p class="section-label">
+                WHY DJANGOSHOP
+            </p>
+
+            <h2>
+                Shopping made simple.
+            </h2>
+        </div>
+
+        <p>
+            We keep everything straightforward so you can
+            focus on finding what you actually want.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                01
+            </div>
+
+            <h3>
+                Quality Products
+            </h3>
+
+            <p>
+                Browse products carefully organized into
+                categories for an easier shopping experience.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                02
+            </div>
+
+            <h3>
+                Easy Shopping
+            </h3>
+
+            <p>
+                Add products to your cart, manage quantities,
+                and place your order with just a few clicks.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                03
+            </div>
+
+            <h3>
+                Track Your Orders
+            </h3>
+
+            <p>
+                Keep all your orders in one place and easily
+                check their current status.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="home-cta">
+
+    <div>
+
+        <p class="section-label">
+            READY TO SHOP?
+        </p>
+
+        <h2>
+            Find something you'll love.
+        </h2>
+
+        <p>
+            Explore our collection and start shopping today.
+        </p>
+
+    </div>
+
+    <a href="{% url 'product_list' %}" class="primary-button">
+        Explore Products
+    </a>
+
+</section>
 
 {% endblock %}

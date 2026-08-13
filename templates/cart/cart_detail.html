@@ -1,82 +1,229 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Shopping Cart
+Shopping Cart | DjangoShop
 {% endblock %}
 
 {% block content %}
 
-<h1>Shopping Cart</h1>
+<div class="cart-page">
 
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
+    <div class="cart-header">
 
-{% if items %}
+        <p class="cart-eyebrow">
+            Your Shopping Bag
+        </p>
 
-    {% for item in items %}
+        <h1>
+            Shopping Cart
+        </h1>
 
-        <div>
+        {% if items %}
+            <p>
+                Review your items before checking out.
+            </p>
+        {% endif %}
 
-            {% if item.product.image %}
-                <img
-                    src="{{ item.product.image.url }}"
-                    alt="{{ item.product.name }}"
-                    width="120"
+    </div>
+
+
+    {% if items %}
+
+        <div class="cart-layout">
+
+            <!-- CART ITEMS -->
+
+            <div class="cart-items">
+
+                {% for item in items %}
+
+                    <div class="cart-item">
+
+                        <!-- PRODUCT IMAGE -->
+
+                        <div class="cart-item-image">
+
+                            {% if item.product.image %}
+
+                                <img
+                                    src="{{ item.product.image.url }}"
+                                    alt="{{ item.product.name }}"
+                                >
+
+                            {% else %}
+
+                                <div class="cart-item-placeholder">
+                                    No Image
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- PRODUCT INFORMATION -->
+
+                        <div class="cart-item-info">
+
+                            <p class="cart-item-category">
+                                {{ item.product.category.name }}
+                            </p>
+
+                            <h2>
+                                {{ item.product.name }}
+                            </h2>
+
+                            <p class="cart-item-price">
+                                Rs. {{ item.product.price }}
+                            </p>
+
+
+                            <!-- QUANTITY -->
+
+                            <div class="cart-quantity">
+
+                                <span>
+                                    Quantity
+                                </span>
+
+                                <div class="quantity-controls">
+
+                                    <a
+                                        href="{% url 'cart:decrease_quantity' item.id %}"
+                                        class="quantity-button"
+                                    >
+                                        −
+                                    </a>
+
+                                    <span class="quantity-number">
+                                        {{ item.quantity }}
+                                    </span>
+
+                                    <a
+                                        href="{% url 'cart:increase_quantity' item.id %}"
+                                        class="quantity-button"
+                                    >
+                                        +
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SUBTOTAL -->
+
+                        <div class="cart-item-right">
+
+                            <p class="cart-item-subtotal">
+                                Rs. {{ item.get_subtotal }}
+                            </p>
+
+                            <a
+                                href="{% url 'cart:remove_from_cart' item.id %}"
+                                class="remove-cart-item"
+                            >
+                                Remove
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <aside class="cart-summary">
+
+                <h2>
+                    Order Summary
+                </h2>
+
+
+                <div class="summary-row">
+
+                    <span>
+                        Items
+                    </span>
+
+                    <span>
+                        {{ items|length }}
+                    </span>
+
+                </div>
+
+
+                <div class="summary-divider"></div>
+
+
+                <div class="summary-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        Rs. {{ total }}
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="{% url 'orders:checkout' %}"
+                    class="checkout-button"
                 >
-            {% endif %}
+                    Proceed to Checkout
+                </a>
+
+
+                <a
+                    href="{% url 'product_list' %}"
+                    class="continue-shopping"
+                >
+                    ← Continue Shopping
+                </a>
+
+            </aside>
+
+        </div>
+
+
+    {% else %}
+
+        <!-- EMPTY CART -->
+
+        <div class="empty-cart">
+
+            <div class="empty-cart-icon">
+                🛒
+            </div>
 
             <h2>
-                {{ item.product.name }}
+                Your cart is empty
             </h2>
 
             <p>
-                Price:
-                ${{ item.product.price }}
+                Looks like you haven't added anything to your cart yet.
             </p>
 
-            <p>
-                Quantity:
-                {{ item.quantity }}
-            </p>
-
-            <p>
-                Subtotal:
-                ${{ item.get_subtotal }}
-            </p>
-
-            <a href="{% url 'cart:decrease_quantity' item.id %}">
-                −
-            </a>
-
-            <a href="{% url 'cart:increase_quantity' item.id %}">
-                +
-            </a>
-
-            <a href="{% url 'cart:remove_from_cart' item.id %}">
-                Remove
+            <a
+                href="{% url 'product_list' %}"
+                class="checkout-button empty-cart-button"
+            >
+                Start Shopping
             </a>
 
         </div>
 
-        <hr>
+    {% endif %}
 
-    {% endfor %}
-
-    <h2>
-        Total: ${{ total }}
-    </h2>
-
-    <a href="{% url 'orders:checkout' %}">
-        Proceed to Checkout
-    </a>
-
-{% else %}
-
-    <p>Your cart is empty.</p>
-
-{% endif %}
+</div>
 
 {% endblock %}

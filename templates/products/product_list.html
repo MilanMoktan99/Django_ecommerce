@@ -1,113 +1,260 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Products
+Products | DjangoShop
 {% endblock %}
 
 {% block content %}
 
-<h1>Products</h1>
+<div class="products-page">
 
-<form method="GET">
+    <!-- PAGE HEADER -->
+    <section class="products-header">
 
-    <input
-        type="text"
-        name="search"
-        placeholder="Search products..."
-        value="{{ search }}"
-    >
+        <div>
+            <p class="section-label">
+                OUR COLLECTION
+            </p>
 
-    <select name="category">
+            <h1>
+                Products
+            </h1>
 
-        <option value="">
-            All Categories
-        </option>
+            <p class="products-intro">
+                Discover products selected for a simple and
+                enjoyable shopping experience.
+            </p>
+        </div>
 
-        {% for category in categories %}
+        {% if user.is_staff %}
 
-            <option
-                value="{{ category.id }}"
-                {% if request.GET.category == category.id|stringformat:"s" %}
-                    selected
-                {% endif %}
+            <a href="{% url 'product_create' %}" class="primary-button">
+                + Add Product
+            </a>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- SEARCH & FILTER -->
+    <section class="product-filters">
+
+        <form method="GET" class="filter-form">
+
+            <div class="search-wrapper">
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search products..."
+                    value="{{ request.GET.search|default:'' }}"
+                >
+
+            </div>
+
+
+            <select name="category">
+
+                <option value="">
+                    All Categories
+                </option>
+
+                {% for category in categories %}
+
+                    <option
+                        value="{{ category.id }}"
+                        {% if request.GET.category == category.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ category.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <button type="submit" class="filter-button">
+                Search
+            </button>
+
+
+            <a href="{% url 'product_list' %}" class="clear-button">
+                Clear
+            </a>
+
+        </form>
+
+    </section>
+
+
+    <!-- CATEGORY PILLS -->
+    <section class="category-section">
+
+        <div class="category-list">
+
+            <a
+                href="{% url 'product_list' %}"
+                class="category-pill
+                {% if not request.GET.category %}
+                    active
+                {% endif %}"
             >
-                {{ category.name }}
-            </option>
+                All
+            </a>
+
+
+            {% for category in categories %}
+
+                <a
+                    href="?category={{ category.id }}"
+                    class="category-pill
+                    {% if request.GET.category == category.id|stringformat:'s' %}
+                        active
+                    {% endif %}"
+                >
+                    {{ category.name }}
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <section class="products-grid">
+
+        {% for product in products %}
+
+            <article class="product-card">
+
+                <!-- IMAGE -->
+
+                <a
+                    href="{% url 'product_detail' product.pk %}"
+                    class="product-image"
+                >
+
+                    {% if product.image %}
+
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="product-placeholder">
+                            No Image
+                        </div>
+
+                    {% endif %}
+
+                </a>
+
+
+                <!-- PRODUCT INFO -->
+
+                <div class="product-info">
+
+                    <p class="product-category">
+                        {{ product.category.name }}
+                    </p>
+
+
+                    <h2>
+
+                        <a href="{% url 'product_detail' product.pk %}">
+                            {{ product.name }}
+                        </a>
+
+                    </h2>
+
+
+                    <div class="product-bottom">
+
+                        <p class="product-price">
+                            Rs. {{ product.price }}
+                        </p>
+
+
+                        {% if product.stock > 0 %}
+
+                            <span class="stock-badge in-stock">
+                                In Stock
+                            </span>
+
+                        {% else %}
+
+                            <span class="stock-badge out-stock">
+                                Out of Stock
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- STAFF ACTIONS -->
+
+                    {% if user.is_staff %}
+
+                        <div class="product-admin-actions">
+
+                            <a
+                                href="{% url 'product_update' product.pk %}"
+                            >
+                                Edit
+                            </a>
+
+                            <a
+                                href="{% url 'product_delete' product.pk %}"
+                                class="delete-link"
+                            >
+                                Delete
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty-products">
+
+                <div class="empty-icon">
+                    —
+                </div>
+
+                <h2>
+                    No products found
+                </h2>
+
+                <p>
+                    Try changing your search or category filter.
+                </p>
+
+                <a
+                    href="{% url 'product_list' %}"
+                    class="primary-button"
+                >
+                    View All Products
+                </a>
+
+            </div>
 
         {% endfor %}
 
-    </select>
+    </section>
 
-    <button type="submit">
-        Search
-    </button>
-
-    <a href="{% url 'product_list' %}">
-        Clear
-    </a>
-
-</form>
-
-<h3>Categories</h3>
-
-<a href="{% url 'product_list' %}">
-    All
-</a>
-
-{% for category in categories %}
-    <a href="?category={{ category.id }}">
-        {{ category.name }}
-    </a>
-{% endfor %}
-
-<hr>
-
-{% if user.is_staff %}
-    <a href="{% url 'product_create' %}">
-        Add Product
-    </a>
-{% endif %}
-
-<hr>
-
-{% for product in products %}
-
-    <div>
-
-        {% if product.image %}
-            <img
-                src="{{ product.image.url }}"
-                alt="{{ product.name }}"
-                width="200"
-            >
-        {% endif %}
-
-        <h2>
-            <a href="{% url 'product_detail' product.pk %}">
-                {{ product.name }}
-            </a>
-        </h2>
-
-        <p>
-            Category: {{ product.category.name }}
-        </p>
-
-        <p>
-            Price: Rs. {{ product.price }}
-        </p>
-
-        <p>
-            Stock: {{ product.stock }}
-        </p>
-
-    </div>
-
-    <hr>
-
-{% empty %}
-
-    <p>No products available.</p>
-
-{% endfor %}
+</div>
 
 {% endblock %}
